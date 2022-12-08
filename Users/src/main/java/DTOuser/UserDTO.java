@@ -1,10 +1,8 @@
-package com.cpe.springboot.user.model;
+package DTOuser;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.cpe.springboot.card.model.CardModel;
 
 public class UserDTO implements Serializable{
 	private static final long serialVersionUID = 4873914494695959431L;
@@ -15,23 +13,12 @@ public class UserDTO implements Serializable{
 	private String lastName;
 	private String surName;
 	private String email;
-	private Set<Integer> cardList = new HashSet<>();
+	private Set<Integer> cardList = new HashSet<Integer>();
 	
 	public UserDTO(){
 	}
 
-	public UserDTO(UserModel user) {
-		this.id = user.getId();
-		this.login = user.getLogin();
-		this.pwd = user.getPwd();
-		this.account = user.getAccount();
-		this.lastName = user.getLastName();
-		this.surName = user.getSurName();
-		this.email = user.getEmail();
-		for (CardModel card : user.getCardList()) {
-			this.cardList.add(card.getId());
-		}
-	}
+
 
 	public Integer getId() {
 		return id;
@@ -98,3 +85,5 @@ public class UserDTO implements Serializable{
 	}
 
 }
+
+

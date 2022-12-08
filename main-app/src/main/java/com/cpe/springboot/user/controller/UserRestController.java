@@ -15,9 +15,10 @@ import org.springframework.web.server.ResponseStatusException;
 import com.cpe.springboot.user.controller.UserAsyncService;
 import com.cpe.springboot.common.tools.DTOMapper;
 import com.cpe.springboot.user.model.AuthDTO;
-import com.cpe.springboot.user.model.UserDTO;
 import com.cpe.springboot.user.model.UserModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import DTOuser.UserDTO;
 
 //ONLY FOR TEST NEED ALSO TO ALLOW CROOS ORIGIN ON WEB BROWSER SIDE
 @CrossOrigin
@@ -60,6 +61,7 @@ public class UserRestController {
 	
 	@RequestMapping(method=RequestMethod.POST,value="/user/{id}")
 	public void updateUserasync(@RequestBody UserDTO user,@PathVariable String id) throws JsonProcessingException {
+		System.out.println("updating");
 		user.setId(Integer.valueOf(id));
 		userAsyncService.updateUserAsync(user);
 	}

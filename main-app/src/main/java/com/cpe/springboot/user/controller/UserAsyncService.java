@@ -8,9 +8,11 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
-import com.cpe.springboot.card.Controller.CardModelService;
-import com.cpe.springboot.user.model.UserDTO;
+
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import DTOuser.UserDTO;
 
 
 @Service
@@ -29,16 +31,14 @@ public class UserAsyncService {
 	public void updateUserAsync(UserDTO user) throws JsonProcessingException {
 
 		 System.out.println("[BUSSERVICE] SEND String MSG=["+user.toString()+"] to Bus=[user]");
-		 //ObjectMapper mapper = new ObjectMapper();
-	      //Converting the Object to JSONString
-	      //String jsonString = mapper.writeValueAsString(user);
-	        jmsTemplate.convertAndSend("user_update",user);
+	      jmsTemplate.convertAndSend("user_update",user);
 	        
 	
 		 
 	}
 	@JmsListener(destination = "user_update",containerFactory="connectionFactory")
 	public void receiveUpdate(final UserDTO MessageReceived,final Message jsonMessage) throws JMSException{
+		System.out.println("receiving");
 		userService.updateUser(MessageReceived);
 
 	}

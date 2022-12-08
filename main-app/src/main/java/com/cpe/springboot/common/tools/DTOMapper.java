@@ -1,8 +1,13 @@
 package com.cpe.springboot.common.tools;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.cpe.springboot.card.model.CardDTO;
 import com.cpe.springboot.card.model.CardModel;
-import com.cpe.springboot.user.model.UserDTO;
+
 import com.cpe.springboot.user.model.UserModel;
+
+import DTOuser.UserDTO;
 
 public class DTOMapper {
 	
@@ -24,7 +29,20 @@ public class DTOMapper {
 	
 	
 	public static UserDTO fromUserModelToUserDTO(UserModel uM) {
-		UserDTO uDto =new UserDTO(uM);
+		UserDTO uDto =new UserDTO();
+		uDto.setId(uM.getId());
+		uDto.setLogin(uM.getLogin());
+		uDto.setPwd(uM.getPwd());
+		uDto.setAccount(uM.getAccount());
+		uDto.setLastName(uM.getLastName());
+		uDto.setSurName(uM.getSurName());
+		uDto.setEmail(uM.getEmail());
+		Set<Integer> cardlist = new HashSet<Integer>();
+		for (CardModel card: uM.getCardList()) {
+			cardlist.add(card.getId());
+		}
+		uDto.setCardList(cardlist);
+		
 		return uDto;
 	}
 	

@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
 import com.cpe.springboot.card.Controller.CardModelService;
 import com.cpe.springboot.card.model.CardModel;
 import com.cpe.springboot.common.tools.DTOMapper;
-import com.cpe.springboot.user.model.UserDTO;
 import com.cpe.springboot.user.model.UserModel;
+
+import DTOuser.UserDTO;
 
 @Service
 public class UserService {
@@ -49,29 +50,6 @@ public class UserService {
 	}
 
 	public UserDTO updateUser(UserDTO user) {
-		UserModel u = fromUDtoToUModel(user);
-		UserModel currentUser = userRepository.findById(u.getId()).get();
-		
-		// updating user's fields
-		String login = u.getLogin();
-		String pwd = u.getPwd();
-		float account = u.getAccount();
-		String lastname = u.getLastName();
-		String surname = u.getSurName();
-		String email = u.getEmail();
-		
-		if (login != null) currentUser.setLogin(login);
-		if (pwd != null) currentUser.setPwd(pwd);
-		if (lastname != null) currentUser.setLastName(lastname);
-		if (surname != null) currentUser.setSurName(surname);
-		if (email != null) currentUser.setEmail(email);
-		currentUser.setAccount(account);
-		
-		UserModel uBd = userRepository.save(currentUser);
-		return DTOMapper.fromUserModelToUserDTO(uBd);
-		 
-	}
-	public UserDTO updateUserAsync(UserDTO user) {
 		UserModel u = fromUDtoToUModel(user);
 		UserModel uBd =userRepository.save(u);
 		return DTOMapper.fromUserModelToUserDTO(uBd);

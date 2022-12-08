@@ -4,6 +4,8 @@ import com.cpe.springboot.card.model.CardModel;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import DTOuser.UserDTO;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
