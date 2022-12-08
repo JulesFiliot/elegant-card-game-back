@@ -49,7 +49,6 @@ public class UserService {
 	}
 
 	public UserDTO updateUser(UserDTO user) {
-		System.out.println(user.getAccount());
 		UserModel u = fromUDtoToUModel(user);
 		UserModel currentUser = userRepository.findById(u.getId()).get();
 		
@@ -66,8 +65,7 @@ public class UserService {
 		if (lastname != null) currentUser.setLastName(lastname);
 		if (surname != null) currentUser.setSurName(surname);
 		if (email != null) currentUser.setEmail(email);
-		System.out.println(account);
-		
+		currentUser.setAccount(account);
 		
 		UserModel uBd = userRepository.save(currentUser);
 		return DTOMapper.fromUserModelToUserDTO(uBd);
