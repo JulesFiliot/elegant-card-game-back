@@ -7,7 +7,6 @@ const axios = require('axios');
 
 const poolRoute = express.Router();
 
-var count = 0;
 const pool = [];
 
 poolRoute.post("/", (req, res)=> {
@@ -18,70 +17,13 @@ poolRoute.get("/:userId", (req, res)=> {
     let user_id = req.params.userId;
     if (pool.length === 0) {
         pool.push(user_id);
-        console.log(pool);
         res.send("stored")
+    } else if (pool.includes(user_id)) {
+        res.send("already in the pool")
     } else {
         waiter_id = pool.shift();
-        console.log(pool)
         res.send("matched with"+waiter_id);
         //request to duel microservice with both ids
     }
-    res.send();
-//    pool.push()
-
-//        const url = "http://tp.cpe.fr:8083/users"
-        
- //       let context = {
- //           method: 'GET'
-  //      }
-        /*axios.get(url).then(
-            response => {
-                console.log(response)
-                ++count;
-                pool.append()
-                console.log(count);
-                if (response.status == '200'){
-                    res.write(JSON.stringify(response.data));
-                    res.send()
-                    return response.data
-                } else {
-                    throw('error fetching user')
-                }
-            }
-        );*/
-
-        /*http.get({
-            hostname: 'tp.cpe.fr:8083',
-            port: 8083,
-            path: '/users',
-            agent: false,  // Create a new agent just for this one request
-          }, (response) => {
-            if (response.status == '200'){
-                return response.json()
-            } else {
-                throw('error fetching user')
-            }
-          }).then((result => {
-            console.log('result:',result)
-        }));*/
-        
-        
-        //http.get(url, (response)=> {
-        //    response.on("data", (chunk)=> {
-                //console.log(chunk)
-//                console.log('ok')
-                //const responseData = JSON.parse(chunk);
-                //console.log(responseData)
-                /*const temperature = responseData.main.temp;
-                const weatherDes = responseData.weather[0].description;
-                const icon = responseData.weather[0].icon;
-                const imageURL = "http://openweathermap.org/img/wn/"+ icon + "@2x.png";
-                const cityName = responseData.name;
-                res.write(`&lt;h1&gt;The weather is ${temperature} degree celsius in ${cityName} and the description is ${weatherDes} &lt;/h1&gt;`)
-                res.write("&lt;img src="+ imageURL +"&gt;")*/
-           //     res.write(chunk)
-           //     res.send()
-           // })
-        //})
 })
 module.exports = poolRoute
