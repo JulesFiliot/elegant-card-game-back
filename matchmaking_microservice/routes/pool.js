@@ -6,20 +6,40 @@ const http = require('http');
 const axios = require('axios');
 
 const poolRoute = express.Router();
+
+var count = 0;
+const pool = [];
+
 poolRoute.post("/", (req, res)=> {
     res.sendFile(__dirname, + "index.html")   
 })
 
-poolRoute.get("/", (req, res)=> {
+poolRoute.get("/:userId", (req, res)=> {
+    let user_id = req.params.userId;
+    if (pool.length === 0) {
+        pool.push(user_id);
+        console.log(pool);
+        res.send("stored")
+    } else {
+        waiter_id = pool.shift();
+        console.log(pool)
+        res.send("matched with"+waiter_id);
+        //request to duel microservice with both ids
+    }
+    res.send();
+//    pool.push()
+
+//        const url = "http://tp.cpe.fr:8083/users"
         
-        const url = "http://tp.cpe.fr:8083/users"
-        
-        let context = {
-            method: 'GET'
-        }
-        axios.get(url).then(
+ //       let context = {
+ //           method: 'GET'
+  //      }
+        /*axios.get(url).then(
             response => {
                 console.log(response)
+                ++count;
+                pool.append()
+                console.log(count);
                 if (response.status == '200'){
                     res.write(JSON.stringify(response.data));
                     res.send()
@@ -28,7 +48,7 @@ poolRoute.get("/", (req, res)=> {
                     throw('error fetching user')
                 }
             }
-        );
+        );*/
 
         /*http.get({
             hostname: 'tp.cpe.fr:8083',
