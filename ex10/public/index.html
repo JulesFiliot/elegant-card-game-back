@@ -5,14 +5,21 @@
 </head>
 <body>
 <ul id="messages"></ul>
+<button onclick="c()">connect</button>
 <form id="form" action="">
     <label>Username</label><input id="idE" autocomplete="off" onchange="b()"/><br>
-    <label>receveur</label><input id="idR" autocomplete="off" /><br>
+    <label>receveur</label>
+    <select id="idR" autocomplete="off" >
+    <option value="">--chose a player--</option>
+
+</select><br>
     <input id="input" autocomplete="off" /><button>Send</button>    </form>
 </body>
 <p id="historique"></p>
 <script src="/socket.io/socket.io.js"></script>
+
 <script>
+    var TEXT
     var socket = io();
     var form = document.getElementById('form');
     var input = document.getElementById('input');
@@ -40,5 +47,26 @@
         socket.emit('username',monID.value)
     }
 
+    socket.on('getUsers',function(data){
+        var SELECT = document.getElementById('idR');
+        console.log(data)
+        TEXT=data
+        json=JSON.parse(data)
+        for (i of json){
+            var OPT = document.createElement('OPTION');
+            OPT.setAttribute('value', i.surName);
+            OPT.setAttribute('id',i.id)
+            OPT.innerHTML=i.surName;
+            SELECT.appendChild(OPT)
+
+        }
+    })
+    function c(){
+        socket.emit('connection',monID.value)
+
+    }
+
+
 </script>
+
 </html>
