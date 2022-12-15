@@ -1,14 +1,13 @@
-const axios = require("axios");
+//const axios = require("axios");
 const APP_KEY = "YOUR_APP_KEY_HERE";
 const zipCodeURL = 'https://www.zipcodeapi.com/rest/';
 
 
 //think about data storing format
 var duel_info = {};
-var matchups = [];
 
 
-exports.find = (req,res,callback) =>{
+/*exports.find = (req,res,callback) =>{
     let URL = zipCodeURL + APP_KEY
     + '/distance.json/' + req.params.zipcode1 + '/'
     + req.params.zipcode2 + '/km';
@@ -35,10 +34,22 @@ exports.find = (req,res,callback) =>{
         }
         return callback(error);
     });
-};
+};*/
 
 exports.init = (req,res,callback) => {
-    duel_info = {};
+    duel_id = Math.trunc(Math.random()*1000);
+    duel_info[duel_id]={
+        state: 'choose_cards',
+        user_id_1: req.params.userId1,
+        user_id_2: req.params.userId2
+    };
+    //request to notifier "user must choose cards"    
+};
+
+exports.chooseCards = (req,res,callback) => {
+    //duel_id = req.params.duelId;
+    console.log('-------------')
+    duel_id = req.body.duelId;
 };
 
 exports.attack = (req,res,callback) => {
