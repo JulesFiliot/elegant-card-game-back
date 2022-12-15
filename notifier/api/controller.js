@@ -9,3 +9,13 @@ exports.notify = (req,res) => {
         }
     });
 }
+
+exports.notif = (req,res) => {
+    notification.notif(req,res,(error,data) => {
+        if (error) {
+            res.send("error");
+        } else {
+            res.send(data);
+        }
+    });
+}
