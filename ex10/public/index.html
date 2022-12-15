@@ -66,6 +66,23 @@
 
     }
 
+    socket.on('refresh connected users',function(data){
+        let l=data.split(';');
+        var SELECT = document.getElementById('idR');
+        var child = SELECT.lastElementChild;
+        while (child) {
+            SELECT.removeChild(child);
+            child = SELECT.lastElementChild;
+        }
+        for (let i of l){
+            var OPT = document.createElement('OPTION');
+            OPT.setAttribute('value', i);
+            OPT.innerHTML=i;
+            SELECT.appendChild(OPT)
+        }
+
+    })
+
 
 </script>
 

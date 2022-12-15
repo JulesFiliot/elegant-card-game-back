@@ -2,6 +2,7 @@ import express from 'express';
 import { Server } from "socket.io";
 import {createServer} from "http";
 import  {getUsers,getUser}  from "./userController.mjs";
+import User  from "./users.js";
 
 const app = express();
 const server = createServer(app);
@@ -14,12 +15,15 @@ var sockets= []
 var ConnectedUsers=[]
 ioServer.on('connection', async (socket) => {
 
+
     sockets.push(socket)
-    let users= await getUsers();
-    console.log("main :"+users)
-
-    socket.emit('getUsers',users)
-
+    let user;
+    let data='';
+    for (let u of ConnectedUsers){
+        data+=u.name+';'
+    }
+    socket.emit('getUsers',data)
+    ioServer.emit('refresh connected users',data)
     socket.username='anonyme'+sockets.indexOf(socket)
     for (let s of sockets){
         console.log(s.username)
@@ -31,33 +35,36 @@ ioServer.on('connection', async (socket) => {
     })
     socket.on('connection',async function (id) {
         const userDTO=JSON.parse(await getUser(id))
-        let user = new user(userDTO, socket)
+        console.log(userDTO)
+        user = new User(userDTO, socket)
+        console.log('user '+user)
         ConnectedUsers.push(user)
-        console.log(ConnectedUsers)
+        let data='';
+        for (let u of ConnectedUsers){
+            data+=u.name+';'
+        }
+        console.log(data)
+        ioServer.emit('refresh connected users',data)
 
     })
 
     socket.on('chat message', function(data) {
         data=JSON.parse(data);
         console.log(data)
-        console.log("going throw list of sockets")
-
         const username_receveur=data.receveur;
-        console.log("for "+username_receveur)
-
-        const username_emeteur=data.emeteur;
+        //const username_emeteur=data.emeteur;
         const message=data.message;
 
-        for (let sock of sockets){
-            console.log("current socket username ="+sock.username)
-            if (sock.username==username_receveur){
+        for (let u of ConnectedUsers){
+            if (u.name==username_receveur){
                 console.log("found")
-                sock.emit('Reponse',message)
+                u.socket.emit('Reponse',message)
             }
         }
     });
     socket.on('disconnect',function(socket){
         sockets.splice(sockets.indexOf(socket), 1);
+        ConnectedUsers.splice(ConnectedUsers.indexOf(user),1)
 
     })
 });
