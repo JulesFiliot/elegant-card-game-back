@@ -3,14 +3,20 @@ import { Server } from "socket.io";
 import {createServer} from "http";
 import  {getUsers,getUser}  from "./userController.mjs";
 import User  from "./users.js";
+import cors from 'cors';
 
 const app = express();
 const server = createServer(app);
 
+app.use(cors());
 app.use(express.static('./public'));
 const port = 9999
 console.log("server is running on port", port);
-const ioServer = new Server(server);
+const ioServer = new Server(server, {
+    cors: {
+      origin: "*",
+    }
+});
 var sockets= []
 var ConnectedUsers=[]
 ioServer.on('connection', async (socket) => {
@@ -33,7 +39,7 @@ ioServer.on('connection', async (socket) => {
         console.log(data)
         console.log('socket username='+socket.username)
     })
-    socket.on('connection',async function (id) {
+    socket.on('userConnection',async function (id) {
         const userDTO=JSON.parse(await getUser(id))
         console.log(userDTO)
         user = new User(userDTO, socket)
@@ -55,8 +61,9 @@ ioServer.on('connection', async (socket) => {
         //const username_emeteur=data.emeteur;
         const message=data.message;
 
+        console.log(ConnectedUsers);
         for (let u of ConnectedUsers){
-            if (u.name==username_receveur){
+            if (u.id==username_receveur){
                 console.log("found")
                 u.socket.emit('Reponse',message)
             }
