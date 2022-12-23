@@ -1,3 +1,4 @@
+const cors = require('cors');
 const express = require("express");
 const bodyParser = require("body-parser")
 
@@ -7,6 +8,7 @@ const PORT = 3001;
 const HOST_NAME = "localhost";
 
 const app = express();
+app.use(cors());
 app.use(express.static("client"));
 app.use(bodyParser.urlencoded({extended: true}));
 
