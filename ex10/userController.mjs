@@ -1,6 +1,5 @@
-import http from "http";
+import fetch from "node-fetch";
 
-import XMLHttpRequest from 'xhr2'
 export function getUser(id){
     const url='http://localhost:8083/user/'+id;
     return fetch(url)
