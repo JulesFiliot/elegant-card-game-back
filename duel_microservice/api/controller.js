@@ -1,4 +1,4 @@
-const distance = require('../service/distance');
+//const distance = require('../service/distance');
 const duel = require('../service/duel');
 
 exports.initDuel = (req,res)=>{
@@ -31,7 +31,40 @@ exports.chooseCards = (req,res)=>{
     })
 }
 
-exports.getDistance = (req,res)=>{
+exports.getDuelInfo = (req,res)=>{
+    duel.getDuelInfo(req,res,(error,data)=>{
+        if (error){
+            res.send("error");
+        }else{
+            console.log(data)
+            res.send(data);
+        }
+    })
+}
+
+exports.getDuelInfo = (req,res)=>{
+    duel.getDuelInfo(req,res,(error,data)=>{
+        if (error){
+            res.send("error");
+        }else{
+            console.log(data)
+            res.send(data);
+        }
+    })
+}
+
+exports.endTurn = (req,res)=>{
+    duel.endTurn(req,res,(error,data)=>{
+        if (error){
+            res.send("error");
+        }else{
+            console.log(data)
+            res.send(data);
+        }
+    })
+}
+
+/*exports.getDistance = (req,res)=>{
  distance.find(req,res,(error,data)=>{
     if (error){
     res.send({distance: -1});
@@ -39,4 +72,4 @@ exports.getDistance = (req,res)=>{
     res.send(data);
     }
  });
-};
+};*/
