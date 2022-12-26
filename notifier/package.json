@@ -10,7 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@stomp/stompjs": "^6.1.2",
     "axios": "^1.2.1",
-    "express": "^4.18.2"
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "socket.io": "^4.5.4",
+    "stomp-client": "^0.9.0",
+    "stompit": "^1.0.0",
+    "websocket": "^1.0.34"
   }
 }
