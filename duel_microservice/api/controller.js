@@ -1,4 +1,3 @@
-//const distance = require('../service/distance');
 const duel = require('../service/duel');
 
 exports.initDuel = (req,res)=>{
@@ -63,13 +62,3 @@ exports.endTurn = (req,res)=>{
         }
     })
 }
-
-/*exports.getDistance = (req,res)=>{
- distance.find(req,res,(error,data)=>{
-    if (error){
-    res.send({distance: -1});
-    }else{
-    res.send(data);
-    }
- });
-};*/

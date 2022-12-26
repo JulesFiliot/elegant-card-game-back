@@ -1,11 +1,8 @@
 const axios = require("axios");
-const { response } = require("express");
 
-//const axios = require("axios");
 const starting_ap = 15;
 var attack_cost = 5;
 
-//think about data storing format
 var duel_info = {
     "testId":{
     user_1_id:"",
@@ -18,37 +15,6 @@ var duel_info = {
     user_2_card_ids:[],
     user_2_cards_info:[]
 }};
-
-
-/*exports.find = (req,res,callback) =>{
-    let URL = zipCodeURL + APP_KEY
-    + '/distance.json/' + req.params.zipcode1 + '/'
-    + req.params.zipcode2 + '/km';
-    axios.get(URL)
-    .then((response) => {
-        console.log(response.data);
-        console.log(response.status);
-        console.log(response.statusText);
-        console.log(response.headers);
-        console.log(response.config);
-        return callback(null, response.data);
-    }).catch(function (error) {
-        if (error.response) {
-            // Request made and server responded
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-        } else if (error.request) {
-            // The request was made but no response was received
-            console.log(error.request);
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log('Error', error.message);
-        }
-        return callback(error);
-    });
-};*/
-
 
 function gameOver(req,res) {
     // send winner to notifier
