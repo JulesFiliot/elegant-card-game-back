@@ -8,15 +8,6 @@ server {
         listen       8084;
         server_name  localhost;
 
-        #charset koi8-r;
-
-        #access_log  logs/host.access.log  main;
-
-        location / {
-            root   html;
-            index  index.html index.htm;
-        }
-
         location /duel/ {
             proxy_pass http://localhost:3002/;
         }
