@@ -74,5 +74,25 @@ exports.notify = (req,res,callback) => {
 exports.notif = (req,res, callback) => {
     let user_name = req.body.user;
     let pwd = req.body.password;
+
+    stompit.connect(connectOptions, (error, client) => {
+      if (error) {
+        console.error('Erreur de connexion à ActiveMQ :', error);
+        return;
+      }
+    
+      console.log('Connecté à ActiveMQ');
+    
+      // Envoyer un message à une file d'attente nommée "notification"
+
+      const sendOptions = {
+        destination: '/queue/notifications',
+      };
+    
+      const frame = client.send(sendOptions);
+      frame.write('mon message');
+      frame.end();
+    });
+
     res.send("User name = "+user_name+", password is "+pwd);
 };
