@@ -42,6 +42,22 @@ public class UserRestController {
 		return uDTOList;
 
 	}
+	@RequestMapping(method=RequestMethod.GET,value="/addusers")
+	private void addAllUsers() {
+		UserDTO user= new UserDTO();
+		user.setSurName("firstUser");
+		user.setLastName("lastName firstUser");
+		userService.addUser(user);
+		UserDTO user2= new UserDTO();
+		user2.setSurName("SecondUser");
+		user2.setLastName("lastName secondUser");
+		userService.addUser(user2);
+		UserDTO user3= new UserDTO();
+		user3.setSurName("ThirdUser");
+		user3.setLastName("lastName thirdUser");
+		userService.addUser(user3);
+
+	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="/user/{id}")
 	private UserDTO getUser(@PathVariable String id) {

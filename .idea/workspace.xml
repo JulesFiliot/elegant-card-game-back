@@ -5,15 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c895151a-4bb1-4a59-88f4-6f00087cdd07" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Users/target/classes/META-INF/maven/DTOs/Users/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Users/target/classes/META-INF/maven/DTOs/Users/pom.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ex10/conversation.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ex10/conversationController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ex10/userController.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ex10/users.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main-app/src/main/java/com/cpe/springboot/user/controller/UserRestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/main-app/src/main/java/com/cpe/springboot/user/controller/UserRestController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/ex10" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -33,6 +45,7 @@
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -51,6 +64,8 @@
       <option name="presentableId" value="Default" />
       <updated>1671015955813</updated>
       <workItem from="1671015957524" duration="1262000" />
+      <workItem from="1671624991495" duration="744000" />
+      <workItem from="1671798452054" duration="1187000" />
     </task>
     <servers />
   </component>
