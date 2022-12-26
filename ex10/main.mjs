@@ -1,7 +1,9 @@
 import express from 'express';
 import { Server } from "socket.io";
 import {createServer} from "http";
-import  {getUsers,getUser}  from "./userController.mjs";
+import Conversation from './conversation.js';
+import { getConversation, sendConversation } from './conversationController.js';
+import  {getUser}  from "./userController.mjs";
 import User  from "./users.js";
 import cors from 'cors';
 
@@ -58,10 +60,18 @@ ioServer.on('connection', async (socket) => {
         console.log(ConnectedUsers);
         for (let u of ConnectedUsers){
             if (u.id==username_receveur){
+                const conv = new Conversation(user.id, u.id, message);
+                sendConversation(conv);
                 console.log("found")
                 u.socket.emit('Reponse',message)
             }
         }
+    });
+
+    socket.on('getConversation', async function (id) {
+        const data = await getConversation(id);
+        console.log('sending conversation', data);
+        socket.emit('conversation', data);
     });
 
     socket.on('userDisconnected', (userId) => {
