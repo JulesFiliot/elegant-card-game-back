@@ -21,7 +21,6 @@ var sockets= []
 var ConnectedUsers=[]
 ioServer.on('connection', async (socket) => {
 
-
     sockets.push(socket)
     let user;
     let data='';
