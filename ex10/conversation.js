@@ -6,11 +6,11 @@ class Conversation {
         else {
             this.id = idrecepteur.toString()+'_'+idemeteur.toString();
         }
-        this.message = JSON.stringify(
-            {
-                id_emetteur:idemeteur,
-                content:message,
-            });
+        this.message = 
+        {
+            id_emetteur:idemeteur,
+            content:message,
+        };
     }
 }
 

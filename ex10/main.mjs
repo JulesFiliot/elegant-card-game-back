@@ -17,95 +17,72 @@ function notify_change_users() {
 
 app.use(cors());
 app.use(express.static('./public'));
-const port = 9999
+const port = 9999;
 console.log("server is running on port", port);
 const ioServer = new Server(server, {
     cors: {
       origin: "*",
     }
 });
-var sockets= []
-var ConnectedUsers=[]
+var sockets= [];
+var ConnectedUsers=[];
 ioServer.on('connection', async (socket) => {
 
     sockets.push(socket)
     let user;
     notify_change_users();
-    socket.username='anonyme'+sockets.indexOf(socket)
-    for (let s of sockets){
-        console.log(s.username)
-    }
+    socket.username='anonyme'+sockets.indexOf(socket);
     socket.on('username',function(data){
-        socket.username=data
-        console.log(data)
-        console.log('socket username='+socket.username)
+        socket.username=data;
     })
     socket.on('userConnection',async function (id) {
-        const userDTO=JSON.parse(await getUser(id))
-        console.log(userDTO)
-        user = new User(userDTO, socket)
-        console.log('user '+user)
-        ConnectedUsers.push(user)
+        const userDTO=JSON.parse(await getUser(id));
+        user = new User(userDTO, socket);
+        ConnectedUsers.push(user);
         notify_change_users();
 
     })
 
     socket.on('chat message', function(data) {
         data=JSON.parse(data);
-        console.log(data)
         const username_receveur=data.receveur;
-        //const username_emeteur=data.emeteur;
         const message=data.message;
 
-        console.log(ConnectedUsers);
-        for (let u of ConnectedUsers){
-            if (u.id==username_receveur){
+        for (let u of ConnectedUsers) {
+            if (u.id==username_receveur) {
                 const conv = new Conversation(user.id, u.id, message);
                 sendConversation(conv);
-                console.log("found")
-                u.socket.emit('Reponse',message)
+                u.socket.emit('Reponse',message);
             }
         }
     });
 
     socket.on('getConversation', async function (id) {
         const data = await getConversation(id);
-        console.log('sending conversation', data);
         socket.emit('conversation', data);
     });
 
     socket.on('userDisconnected', (userId) => {
-        console.log(typeof userId);
-        for ( let usr of ConnectedUsers){
-            console.log(usr.socket.id)
-            if (usr.id===userId){
+        for ( let usr of ConnectedUsers) {
+            if (usr.id===userId) {
                 ConnectedUsers.splice(ConnectedUsers.indexOf(usr),1)
-                console.log(ConnectedUsers)
-                console.log(usr.surName+' disconnected')
                 notify_change_users();
                 break;
             }
         }
     });
 
-    socket.on('disconnect',()=>{
+    socket.on('disconnect',() => {
         sockets.splice(sockets.indexOf(socket), 1);
-        console.log(socket.id);
 
-        for ( let usr of ConnectedUsers){
-            console.log(usr.socket.id)
-
-            if (usr.socket.id===socket.id){
+        for ( let usr of ConnectedUsers) {
+            if (usr.socket.id === socket.id){
                 ConnectedUsers.splice(ConnectedUsers.indexOf(usr),1)
-                console.log(ConnectedUsers)
-                console.log(usr.surName+' disconnected')
-
                 notify_change_users();
                 break;
             }
         }
-        console.log('disconnected')
     })
 });
 
-server.listen(9999)
+server.listen(9999);
