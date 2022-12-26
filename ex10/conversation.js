@@ -1,21 +1,16 @@
 class Conversation {
     constructor(idemeteur,idrecepteur,message) {
-        var d = new Date();
-        var n = d.toLocaleTimeString();
-        if(id1<id2){
-            this.id=idemeteur.toString()+idrecepteur.toString()
+        if (idemeteur < idrecepteur) {
+            this.id = idemeteur.toString()+'_'+idrecepteur.toString();
         }
-        else{
-            this.id=idemeteur.toString()+idrecepteur.toString()
+        else {
+            this.id = idrecepteur.toString()+'_'+idemeteur.toString();
         }
         this.message = JSON.stringify(
-            {emeteur:idemeteur,
-                recepteur:idrecepteur,
-                message:message,
-                heure:n,
-
+            {
+                id_emetteur:idemeteur,
+                content:message,
             });
-
     }
 }
 
