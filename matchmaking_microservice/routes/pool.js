@@ -1,9 +1,6 @@
 const express = require("express");
 const https = require('https');
 const http = require('http');
-//const fetch = require('node-fetch');
-//import fetch from 'node-fetch'
-const axios = require('axios');
 
 const poolRoute = express.Router();
 

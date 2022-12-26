@@ -1,3 +1,4 @@
 {
-    "ros.distro": "melodic"
+    "ros.distro": "melodic",
+    "java.compile.nullAnalysis.mode": "automatic"
 }
