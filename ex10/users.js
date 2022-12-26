@@ -1,7 +1,8 @@
  class User {
     constructor(userDTO, socket) {
-        this.name = userDTO.surName;
         this.id = userDTO.id;
+        this.surName = userDTO.surName;
+        this.lastName = userDTO.lastName;
         this.socket=socket
     }
 }
