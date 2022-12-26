@@ -52,7 +52,7 @@ ioServer.on('connection', async (socket) => {
             if (u.id==username_receveur) {
                 const conv = new Conversation(user.id, u.id, message);
                 sendConversation(conv);
-                u.socket.emit('Reponse',message);
+                u.socket.emit('Reponse', JSON.stringify({ content: message, id_emetteur: user.id }));
             }
         }
     });
