@@ -21,6 +21,11 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
     console.log('Client connected');
+
+    socket.on('skipOpponentWait', () => {
+        // todo emit for testing purpose
+        socket.emit('pool:opponentFound', JSON.stringify({ id: 16, lastName: 'drill', surName: 'opsss' }));
+    });
     
     socket.on('disconnect', () => {
         console.log('Client disconnected');
