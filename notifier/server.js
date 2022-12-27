@@ -1,7 +1,7 @@
 const cors = require('cors');
 const express = require('express')
 const app = express();
-const port = 3004;
+const port = 3001;
 const routes = require('./api/route');
 
 //ce code de websocket est a tester avec le front
