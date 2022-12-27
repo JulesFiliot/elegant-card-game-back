@@ -1,24 +1,29 @@
+import fetch from "node-fetch";
 import conversation from "./conversation.js";
-export function sendConversation(conversation){
 
-    const url='http://localhost:8083/conversation';
+export async function sendConversation(conversation){
+    let id = conversation.id
+    const url='http://localhost:8083/Conversation/'+id;
 
     return fetch(url, {
         method: 'POST',
         body: JSON.stringify({
-            id:conversation.id,
-            id_emeteur: conversation.message.emeteur,
-            id_recepteur:conversation.message.receveur,
-            message:conversation.message.message,
-            time:conversation.message.heure,
+            id_emetteur: conversation.message.id_emetteur,
+            content: conversation.message.content,
         }),
         headers: {
             'Content-Type': 'application/json'
         }
     })
-        .then(response => response.json())
-        .then(data => console.log(data));
+        .then(() => console.log('conversation sent to main-app OK'));
 
 
+
+}
+export async function getConversation(id){
+    const url='http://localhost:8083/Conversation/'+id;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
 
 }

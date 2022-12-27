@@ -1,78 +1,88 @@
 import express from 'express';
 import { Server } from "socket.io";
 import {createServer} from "http";
-import  {getUsers,getUser}  from "./userController.mjs";
+import Conversation from './conversation.js';
+import { getConversation, sendConversation } from './conversationController.js';
+import  {getUser}  from "./userController.mjs";
 import User  from "./users.js";
 import cors from 'cors';
 
 const app = express();
 const server = createServer(app);
 
+function notify_change_users() {
+    const data = ConnectedUsers.map(u => ({ id: u.id, surName: u.surName, lastName: u.lastName }));
+    ioServer.emit('refresh connected users',data);
+}
+
 app.use(cors());
 app.use(express.static('./public'));
-const port = 9999
+const port = 9999;
 console.log("server is running on port", port);
 const ioServer = new Server(server, {
     cors: {
       origin: "*",
     }
 });
-var sockets= []
-var ConnectedUsers=[]
+var sockets= [];
+var ConnectedUsers=[];
 ioServer.on('connection', async (socket) => {
 
     sockets.push(socket)
     let user;
-    let data='';
-    for (let u of ConnectedUsers){
-        data+=u.name+';'
-    }
-    socket.emit('getUsers',data)
-    ioServer.emit('refresh connected users',data)
-    socket.username='anonyme'+sockets.indexOf(socket)
-    for (let s of sockets){
-        console.log(s.username)
-    }
+    notify_change_users();
+    socket.username='anonyme'+sockets.indexOf(socket);
     socket.on('username',function(data){
-        socket.username=data
-        console.log(data)
-        console.log('socket username='+socket.username)
+        socket.username=data;
     })
     socket.on('userConnection',async function (id) {
-        const userDTO=JSON.parse(await getUser(id))
-        console.log(userDTO)
-        user = new User(userDTO, socket)
-        console.log('user '+user)
-        ConnectedUsers.push(user)
-        let data='';
-        for (let u of ConnectedUsers){
-            data+=u.name+';'
-        }
-        console.log(data)
-        ioServer.emit('refresh connected users',data)
+        const userDTO=JSON.parse(await getUser(id));
+        user = new User(userDTO, socket);
+        ConnectedUsers.push(user);
+        notify_change_users();
 
     })
 
     socket.on('chat message', function(data) {
         data=JSON.parse(data);
-        console.log(data)
         const username_receveur=data.receveur;
-        //const username_emeteur=data.emeteur;
         const message=data.message;
 
-        console.log(ConnectedUsers);
-        for (let u of ConnectedUsers){
-            if (u.id==username_receveur){
-                console.log("found")
-                u.socket.emit('Reponse',message)
+        for (let u of ConnectedUsers) {
+            if (u.id==username_receveur) {
+                const conv = new Conversation(user.id, u.id, message);
+                sendConversation(conv);
+                u.socket.emit('Reponse', JSON.stringify({ content: message, id_emetteur: user.id }));
             }
         }
     });
-    socket.on('disconnect',function(socket){
-        sockets.splice(sockets.indexOf(socket), 1);
-        ConnectedUsers.splice(ConnectedUsers.indexOf(user),1)
 
+    socket.on('getConversation', async function (id) {
+        const data = await getConversation(id);
+        socket.emit('conversation', data);
+    });
+
+    socket.on('userDisconnected', (userId) => {
+        for ( let usr of ConnectedUsers) {
+            if (usr.id===userId) {
+                ConnectedUsers.splice(ConnectedUsers.indexOf(usr),1)
+                notify_change_users();
+                break;
+            }
+        }
+    });
+
+    socket.on('disconnect',() => {
+        sockets.splice(sockets.indexOf(socket), 1);
+
+        for ( let usr of ConnectedUsers) {
+            if (usr.socket.id === socket.id){
+                ConnectedUsers.splice(ConnectedUsers.indexOf(usr),1)
+                notify_change_users();
+                break;
+            }
+        }
     })
 });
 
-server.listen(9999)
+server.listen(9999);

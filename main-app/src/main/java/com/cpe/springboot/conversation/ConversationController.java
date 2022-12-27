@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cpe.springboot.store.model.StoreOrder;
-import com.cpe.springboot.user.model.AuthDTO;
 
 @CrossOrigin
 @RestController
@@ -22,8 +20,8 @@ public class ConversationController {
 		this.conversationService=conversationService;
 	}
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
-	private List<Message> getAllMessages(@PathVariable String id) {
-		return conversationService.getConversation(id);	
+	private List<MessageDTO> getAllMessages(@PathVariable String id) {
+		return conversationService.getMessagesDTO(id);	
 
 	}
 	@RequestMapping(method = RequestMethod.POST, value = "/{id}")

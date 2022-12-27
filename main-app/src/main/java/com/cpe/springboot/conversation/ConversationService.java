@@ -23,20 +23,51 @@ public class ConversationService {
 		
 	}
 
-	public List<Message> getConversation(String id) {
-		List<Message> messages = new ArrayList<>();
+	public ConversationModel getConversation(String id) {
+		
 		List<ConversationModel> conv;
 		conv=conversationRepository.findByConversationid(id);
 		if (conv.size()>0) {
-			System.out.println("conversation Found 2");
-			messages=conv.get(0).getMessage();
+			return conv.get(0);
 			}
 		else {
 			System.out.println("conversation not Found 2");
+			ConversationModel conversation = null;
+			return conversation;
 			
 		}
-		System.out.println(messages.toString());
+		
+		
+	}
+	public List<Message> getMessages(String id){
+		List<Message> messages = new ArrayList<>();
+		ConversationModel conv = getConversation(id);
+		if (conv!=null) {
+			return conv.getMessage();
+		}
+		
+
 		return messages;
+		
+		
+	}
+	public List<MessageDTO> getMessagesDTO(String id){
+		List<MessageDTO> messagesDTO = new ArrayList<>();
+		ConversationModel conv = getConversation(id);
+
+		if (conv!=null) {
+			List<Message> messages = conv.getMessage();
+			for (int i = 0; i < messages.size(); i++) {
+				Message message = messages.get(i);
+				MessageDTO messageDTO=new MessageDTO(message.getContent(),message.getId_emetteur());
+				messagesDTO.add(messageDTO);
+				
+			};
+				
+		}
+		
+
+		return messagesDTO;
 		
 		
 	}
@@ -44,13 +75,13 @@ public class ConversationService {
 		
 		
 		
-		List<Message> messages = getConversation(id);
+		List<Message> messages = getMessages(id);
 		messages.add(message);
-		List<ConversationModel> conv=conversationRepository.findByConversationid(id);
+		ConversationModel conv = getConversation(id);
 		ConversationModel conversation;
-		if (conv.size()>0) {
+		if (conv!=null) {
 			System.out.println("conversation found");
-			conversation=conv.get(0);
+			conversation=conv;
 			conversation.setMessage(messages);
 			
 		}
@@ -59,8 +90,9 @@ public class ConversationService {
 			conversation=new ConversationModel(id,messages);
 		}
 		
-		
-		
+		conversationRepository.save(conversation);
+		message.setConversation(conversation);
+		messageRepository.save(message);
 		System.out.println("conv id: "+conversation.getId_conversation());
 		List<Message> messages1 = conversation.getMessage();
 		System.out.println(messages1.size()+" messages were found");
@@ -68,10 +100,10 @@ public class ConversationService {
 		System.out.println("id :"+messages1.get(i).getId());
 		System.out.println("id emetteur :"+messages1.get(i).getId_emetteur());
 		System.out.println("message :"+messages1.get(i).getContent());}
+
 		
-		conversationRepository.save(conversation);
-		message.setConversation(conversation);
-		messageRepository.save(message);
+
+		
 	}
 	
 
