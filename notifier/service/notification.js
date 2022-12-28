@@ -72,8 +72,8 @@ exports.notify = (req,res,callback) => {
 };
 
 exports.notif = (req,res, callback) => {
-    let user_name = req.body.user;
-    let pwd = req.body.password;
+    //let user_name = req.body.user;
+    //let pwd = req.body.password;
 
     stompit.connect(connectOptions, (error, client) => {
       if (error) {
@@ -90,7 +90,7 @@ exports.notif = (req,res, callback) => {
       };
     
       const frame = client.send(sendOptions);
-      frame.write('mon message');
+      frame.write(req.body.duel_id);
       frame.end();
     });
 

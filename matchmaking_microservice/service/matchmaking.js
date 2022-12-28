@@ -1,4 +1,5 @@
 const pool = [];
+const init_duel_url = "http://127.0.0.1:8084/duel/init/";
 
 exports.pool = (req,res,callback) => {
     let user_id = req.params.userId;
@@ -9,6 +10,11 @@ exports.pool = (req,res,callback) => {
         res.send("already in the pool")
     } else {
         waiter_id = pool.shift();
+        let payload = {
+            userId1: waiter_id,
+            userId2: user_id
+        }
+        axios.post(init_duel_url, payload).catch((err)=>{console.log(err)});
         res.send("matched with"+waiter_id);
         //request to duel microservice with both ids
     }
