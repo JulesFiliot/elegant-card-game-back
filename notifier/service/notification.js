@@ -9,7 +9,7 @@ const connectOptions = {
 // sur le websocket
 
 // dans ce code on depile les message en queue
-stompit.connect(connectOptions, (error, client) => {
+/*stompit.connect(connectOptions, (error, client) => {
     if (error) {
       console.error('Erreur de connexion à ActiveMQ :', error);
       return;
@@ -38,7 +38,7 @@ stompit.connect(connectOptions, (error, client) => {
         console.log('Message reçu :', body);
       });
     });
-  });
+  });*/
 
 // test avec des request get, la fonction notif en dessous est un 
 // exemple de requete post fonctionnelle, pour l'utiliser avec
@@ -90,9 +90,10 @@ exports.notif = (req,res, callback) => {
       };
     
       const frame = client.send(sendOptions);
-      frame.write(req.body.duel_id);
+      frame.write("ceci est mon message"/*req.body.duel_id*/);
       frame.end();
     });
-
-    res.send("User name = "+user_name+", password is "+pwd);
+    res.sendStatus(200);
+    
+    //res.send("User name = "+user_name+", password is "+pwd);
 };

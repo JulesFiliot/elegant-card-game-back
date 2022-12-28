@@ -3,6 +3,12 @@ const express = require('express')
 const { Server } = require("socket.io");
 const http = require('http');
 const routes = require('./api/route');
+const stompit = require('stompit');
+
+const connectOptions = {
+  host: 'localhost',
+  port: 61613,
+};
 
 const app = express();
 const port = 3001;
@@ -19,11 +25,45 @@ const io = new Server(server, {
     }
 });
 
+
 io.on('connection', (socket) => {
     console.log('Client connected');
 
+    stompit.connect(connectOptions, (error, client) => {
+        if (error) {
+          console.error('Erreur de connexion à ActiveMQ :', error);
+          return;
+        }
+      
+        console.log('Connecté à ActiveMQ');
+      
+        // Souscrire à une file d'attente nommée "notifications"
+    
+        const subscribeOptions = {
+          destination: '/queue/notifications',
+        };
+      
+        client.subscribe(subscribeOptions, (error, message) => {
+          if (error) {
+            console.error('Erreur lors de la réception du message :', error);
+            return;
+          }
+      
+          message.readString('utf-8', (error, body) => {
+            if (error) {
+              console.error('Erreur lors de la lecture du message :', error);
+              return;
+            }
+            socket.emit('message : ', body);
+            
+            console.log('Message reçu :', body);
+          });
+        });
+    });
+
     socket.on('skipOpponentWait', () => {
         // todo emit for testing purpose
+        
         socket.emit('pool:opponentFound', JSON.stringify({ id: 16, lastName: 'drill', surName: 'opsss' }));
     });
     
