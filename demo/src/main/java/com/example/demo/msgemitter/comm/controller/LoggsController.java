@@ -46,7 +46,7 @@ public class LoggsController {
     public void notificationLogger(String msgStr) {
 		Loggs log= new Loggs();
 		log.setContent(msgStr);
-		log.setType("[updating user]");
+		log.setType("[notification]");
 		loggsService.addLoggs(log);		
         System.out.println("[NOTIFICATION] RECEIVED String MSG=["+msgStr+"]");
 
