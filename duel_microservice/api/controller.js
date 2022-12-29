@@ -35,7 +35,6 @@ exports.getDuelInfo = (req,res)=>{
         if (error){
             res.send("error");
         }else{
-            console.log(data)
             res.send(data);
         }
     })
@@ -46,7 +45,6 @@ exports.getDuelInfo = (req,res)=>{
         if (error){
             res.send("error");
         }else{
-            console.log(data)
             res.send(data);
         }
     })
@@ -57,7 +55,6 @@ exports.endTurn = (req,res)=>{
         if (error){
             res.send("error");
         }else{
-            console.log(data)
             res.send(data);
         }
     })

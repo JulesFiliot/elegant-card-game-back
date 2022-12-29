@@ -1,5 +1,5 @@
 {
-  "name": "ex10",
+  "name": "chat_microservice",
   "version": "1.0.0",
   "main": "main.mjs",
   "scripts": {
