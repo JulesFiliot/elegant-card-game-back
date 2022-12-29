@@ -57,7 +57,7 @@ public class StoreService {
 
 		c.setUser(null);
 		cardService.updateCard(c);
-		u.setAccount(u.getAccount() + c.computePrice());
+		u.setAccount(u.getAccount() + c.getPrice());
 		userService.updateUser(u);
 		StoreTransaction sT = new StoreTransaction(user_id, card_id, StoreAction.SELL);
 		storeRepository.save(sT);
