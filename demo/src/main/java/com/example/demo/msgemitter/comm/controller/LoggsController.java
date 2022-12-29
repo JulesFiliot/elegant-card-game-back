@@ -33,10 +33,8 @@ public class LoggsController {
         jsonObject.put("id", msgStr.getId());
     	jsonObject.put("CardList", msgStr.getCardList().toString());
         jsonObject.put("Email", msgStr.getEmail());
-        String jsonString = jsonObject.toString();
+        String jsonString = jsonObject.toString(4);
         log.setContent(jsonString);
-
-        System.out.println(jsonString);
 		log.setType("[updating user]");
 		loggsService.addLoggs(log);		
         System.out.println("[UPDATE USER] RECEIVED String MSG=["+jsonString+"]");
@@ -45,10 +43,11 @@ public class LoggsController {
 	@JmsListener(destination = "notifications", containerFactory = "connectionFactory")
     public void notificationLogger(String msgStr) {
 		Loggs log= new Loggs();
+		JSONObject jsonObject = new JSONObject(msgStr);
 		log.setContent(msgStr);
 		log.setType("[notification]");
 		loggsService.addLoggs(log);		
-        System.out.println("[NOTIFICATION] RECEIVED String MSG=["+msgStr+"]");
+        System.out.println("[NOTIFICATION] RECEIVED String MSG=["+jsonObject.toString(4)+"]");
 
     }
 
