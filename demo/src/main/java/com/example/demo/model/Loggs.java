@@ -14,7 +14,7 @@ public class Loggs {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name="Id")
   private Long id;
-  @Column(name="content")
+  @Column(name="content", length = 10000)
   private String content;
   @Column(name="Type")
   private String type;
