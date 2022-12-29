@@ -32,7 +32,7 @@ public class LoggsController {
         System.out.println("[UPDATE USER] RECEIVED String MSG=["+msgStr+"]");
 
     }
-	@JmsListener(destination = "notification", containerFactory = "connectionFactory")
+	@JmsListener(destination = "notifications", containerFactory = "connectionFactory")
     public void notificationLogger(String msgStr) {
 		Loggs log= new Loggs();
 		log.setContent(msgStr);
