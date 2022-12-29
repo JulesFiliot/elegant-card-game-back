@@ -20,7 +20,7 @@ exports.notify = (req,res,callback) => {
         // Envoyer un message à une file d'attente nommée "notification"
 
         const sendOptions = {
-          destination: '/queue/notifications',
+          destination: '/topic/notifications',
         };
       
         const frame = client.send(sendOptions);
@@ -41,7 +41,7 @@ exports.notif = (req,res, callback) => {
       console.log('Connecté à ActiveMQ');
 
       const sendOptions = {
-        destination: '/queue/notifications',
+        destination: '/topic/notifications',
       };
     
       const frame = client.send(sendOptions);

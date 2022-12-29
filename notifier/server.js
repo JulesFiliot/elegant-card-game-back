@@ -39,7 +39,7 @@ ioServer.on('connection', (socket) => {
         // Souscrire à une file d'attente nommée "notifications"
     
         const subscribeOptions = {
-          destination: '/queue/notifications',
+          destination: '/topic/notifications',
         };
       
         client.subscribe(subscribeOptions, (error, message) => {
