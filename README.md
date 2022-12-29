@@ -8,7 +8,7 @@ server {
         listen       8084;
         server_name  localhost;
 
-        location /duel/ {
+		location /duel/ {
             proxy_pass http://localhost:3002/;
         }
 
@@ -17,8 +17,20 @@ server {
         }
 
         location /notifier/ {
-            proxy_pass http://localhost:3004/;
+            proxy_pass http://localhost:3001/;
         }
+
+		location /mainapp/{
+            proxy_pass http://localhost:8083/;
+        }
+
+		location /chatws/ {
+			proxy_pass http://localhost:9999/socket.io/;
+		}
+		
+		location /notifierws/ {
+			proxy_pass http://localhost:3001/socket.io/;
+		}
 
     }
 ```
