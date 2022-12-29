@@ -31,7 +31,7 @@ public class TutoStepByStepMqApplication {
 	                                                           DefaultJmsListenerContainerFactoryConfigurer configurer) {
 	   DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
 	   configurer.configure(factory, connectionFactory);
-	   factory.setPubSubDomain(false);
+	   factory.setPubSubDomain(true);
 	   return factory;
 	 }
 
