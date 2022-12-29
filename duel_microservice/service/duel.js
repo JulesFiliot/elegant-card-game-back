@@ -39,15 +39,43 @@ function isGameWon(duel_id) {
     return false;
 }
 
-function gameOver(callback, duelId, winnerId) {
-    // send winner to notifier
-    axios.post(notify_url, { duel_id: duelId, winner_id: winnerId }).catch((err)=>{console.log(err)});
+async function gameOver(callback, duelId, winnerId) {
     // give money to winning user
+    let winner;
+    let looser;
+    axios.get(`http://localhost:8083/user/${winnerId}`)
+        .then((data) => {
+            winner = data?.data;
+            if (winnerId == duel_info[duelId].player_1.id) {
+                looser = duel_info[duelId].player_2.id;
+            } else {
+                looser = duel_info[duelId].player_1.id;
+            }
+            axios.get(`http://localhost:8083/user/${looser}`)
+                .then((data) => {
+                    looser = data?.data;
+                    let pay = 0;
+                    const isWinnerRicher = winner.account > looser.account;
+                    if (isWinnerRicher) {
+                        pay = looser.account * 0.1;
+                        winner.account += looser.account * 0.1;
+                        looser.account -= looser.account * 0.1;
+                    } else {
+                        pay = winner.account * 0.1;
+                        winner.account += winner.account * 0.1;
+                        looser.account -= winner.account * 0.1;
+                    }
+                    axios.post(`http://localhost:8083/user/${looser.id}`, looser);
+                    axios.post(`http://localhost:8083/user/${winnerId}`, winner).finally(() => {
+                        // send winner to notifier
+                        axios.post(notify_url, { duel_id: duelId, winner_id: winnerId, pay });
+                    });
+                });
+        })
+        .catch((err) => {console.log(err)});
 }
 
 function sendToNotifierWithId(data, duelId) {
-    // let payload = duel_info[req.body.duelId];
-    // payload.duel_id = req.body.duelId;
     const payload = { ...data, duel_id: duelId };
     axios.post(notify_url, payload).catch((err)=>{console.log(err)});
 }
