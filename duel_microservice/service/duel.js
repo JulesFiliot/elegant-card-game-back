@@ -127,7 +127,6 @@ exports.chooseCards = (req,res,callback) => {
         // send duel_info to notifier
         sendToNotifierWithId(duel_info[duel_id], duel_id);
         return callback("","processing card choice");
-        //res.send("processing card choice")
     });
 
 };
@@ -145,7 +144,6 @@ exports.attack = (req,res,callback) => {
             duel_info[req.body.duelId].player_1.user_ap -= attack_cost;
             duel_info[req.body.duelId].player_2.user_card_ids.forEach(function(card, i) {
                 if (card.id == req.body.defCardId) {
-                    // damage = att_card.attack - card.defence;
                     damage = att_card.attack * att_card.attack / (att_card.attack + card.defence)
                     if (damage > 0) {
                         duel_info[req.body.duelId].player_2.user_card_ids[i].hp -= damage;
@@ -161,7 +159,6 @@ exports.attack = (req,res,callback) => {
             duel_info[req.body.duelId].player_2.user_ap -= attack_cost;
             duel_info[req.body.duelId].player_1.user_card_ids.forEach(function(card, i) {
                 if (card.id == req.body.defCardId) {
-                    // damage = att_card.attack - card.defence;
                     damage = att_card.attack * att_card.attack / (att_card.attack + card.defence)
                     if (damage > 0) {
                         duel_info[req.body.duelId].player_1.user_card_ids[i].hp -= damage;
@@ -176,8 +173,7 @@ exports.attack = (req,res,callback) => {
 
     //send duel_info to notifier
     sendToNotifierWithId(duel_info[req.body.duelId], req.body.duelId);
-    return callback("","processing attack")
-//    res.send("processing attack");
+    return callback("","processing attack");
 };
 
 exports.endTurn = (req,res,callback) => {
@@ -197,8 +193,6 @@ exports.endTurn = (req,res,callback) => {
 };
 
 exports.getDuelInfo = (req,res,callback) => {
-    console.log('client getting duel info')
-    //res.send("ok")
     sendToNotifierWithId(duel_info[req.body.duelId], req.body.duelId);
     return callback("",duel_info[req.body.duelId]);
 };

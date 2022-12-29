@@ -5,7 +5,6 @@ exports.pool = (req,res)=>{
         if (error){
             res.send("error");
         }else{
-            console.log(data)
             res.send(data);
         }
     })
@@ -16,7 +15,6 @@ exports.cancelPool = (req,res)=>{
         if (error){
             res.send("error");
         }else{
-            console.log(data)
             res.send(data);
         }
     })

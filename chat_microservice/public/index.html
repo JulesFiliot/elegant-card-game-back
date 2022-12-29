@@ -49,7 +49,6 @@
 
     socket.on('getUsers',function(data){
         var SELECT = document.getElementById('idR');
-        console.log(data)
         TEXT=data
         json=JSON.parse(data)
         for (i of json){
