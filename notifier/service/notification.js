@@ -90,7 +90,7 @@ exports.notif = (req,res, callback) => {
       };
     
       const frame = client.send(sendOptions);
-      frame.write("ceci est mon message"/*req.body.duel_id*/);
+      frame.write(JSON.stringify(req.body));
       frame.end();
     });
     res.sendStatus(200);

@@ -19,14 +19,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(routes);
 
-const io = new Server(server, {
+const ioServer = new Server(server, {
     cors: {
       origin: "*",
     }
 });
 
-
-io.on('connection', (socket) => {
+ioServer.on('connection', (socket) => {
     console.log('Client connected');
 
     stompit.connect(connectOptions, (error, client) => {
@@ -54,17 +53,10 @@ io.on('connection', (socket) => {
               console.error('Erreur lors de la lecture du message :', error);
               return;
             }
-            socket.emit('message : ', body);
-            
-            console.log('Message reçu :', body);
+            console.log(body);
+            ioServer.emit('message', body);
           });
         });
-    });
-
-    socket.on('skipOpponentWait', () => {
-        // todo emit for testing purpose
-        
-        socket.emit('pool:opponentFound', JSON.stringify({ id: 16, lastName: 'drill', surName: 'opsss' }));
     });
     
     socket.on('disconnect', () => {

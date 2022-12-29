@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const starting_ap = 15;
+const starting_ap = 200;
 var attack_cost = 5;
 const notify_url = "http://127.0.0.1:8084/notifier/notify";
 
@@ -21,31 +21,34 @@ var duel_info = {
 
 //return winner id if game over
 function isGameWon(duel_id) {
-    let alive_card_1 = duel_info[duel_id].user_1_cards_info.find(card => card.hp > 0);
-    let alive_card_2 = duel_info[duel_id].user_2_cards_info.find(card => card.hp > 0);
+    let alive_card_1 = duel_info[duel_id].player_1.user_card_ids.find(card => card.hp > 0);
+    let alive_card_2 = duel_info[duel_id].player_2.user_card_ids.find(card => card.hp > 0);
     if (alive_card_1 && alive_card_2) {
         return false;
     }
     if (alive_card_1 && !alive_card_2) {
-        duel_info[duel_id]['state']="user 1 won";
-        return duel_info[duel_id][user_1_id];
+        duel_info[duel_id]['state']="game_over";
+        sendToNotifierWithId(duel_info[duel_id], duel_id);
+        return duel_info[duel_id].player_1.id;
     }
     if (!alive_card_1 && alive_card_2) {
-        duel_info[duel_id]['state']="user 2 won";
-        return duel_info[duel_id][user_2_id];
+        duel_info[duel_id]['state']="game_over";
+        sendToNotifierWithId(duel_info[duel_id], duel_id);
+        return duel_info[duel_id].player_2.id;
     }
-    return alive_card;
+    return false;
 }
 
 function gameOver(callback, duelId, winnerId) {
     // send winner to notifier
-    axios.post(notify_url, payload).catch((err)=>{console.log(err)});
+    axios.post(notify_url, { duel_id: duelId, winner_id: winnerId }).catch((err)=>{console.log(err)});
     // give money to winning user
 }
 
-function sendToNotifierWithId(data) {
-    let payload = duel_info[req.body.duelId];
-    payload.duel_id = req.body.duelId;
+function sendToNotifierWithId(data, duelId) {
+    // let payload = duel_info[req.body.duelId];
+    // payload.duel_id = req.body.duelId;
+    const payload = { ...data, duel_id: duelId };
     axios.post(notify_url, payload).catch((err)=>{console.log(err)});
 }
 
@@ -75,69 +78,76 @@ exports.chooseCards = (req,res,callback) => {
     // add request to UserService to check if user really possesses the cards
 
     // add request to CardService to get info about chosen cards
-    let cards_info_url = 'http://vps.cpe-sn.fr:8083/cards'
+    let cards_info_url = 'http://localhost:8083/cards'
     axios.get(cards_info_url).then((response)=>{
-        if (user_id==duel_info[duel_id].user_1_id){
-            duel_info[duel_id].user_1_card_ids = response.data.filter((c) => card_ids.includes(c.id))
-        } else if (user_2_id==duel_info.user_2_id){
-            duel_info[duel_id].user_2_card_ids = response.data.filter((c) => card_ids.includes(c.id))
+        if (user_id==duel_info[duel_id].player_1.id){
+            duel_info[duel_id].player_1.user_card_ids = response.data.filter((c) => card_ids.includes(c.id))
+        } else if (user_id==duel_info[duel_id].player_2.id){
+            duel_info[duel_id].player_2.user_card_ids = response.data.filter((c) => card_ids.includes(c.id))
         } else {
+            console.log('ERROR, this user is not part of the duel');
             //ERROR, this user is not part of the duel
         }
         
-        if (duel_info[duel_id].user_1_card_ids && duel_info[duel_id].user_2_card_ids) {
+        if (duel_info[duel_id].player_1.user_card_ids && duel_info[duel_id].player_2.user_card_ids) {
             //start duel
             duel_info[duel_id].state = "fighting";
+            duel_info[duel_id].player_1.user_ap = starting_ap;
+            duel_info[duel_id].player_2.user_ap = starting_ap;
             Math.random()<0.5 ? duel_info[duel_id].turn = 1 : duel_info[duel_id].turn = 2;
         }
         // send duel_info to notifier
-        sendToNotifierWithId(duel_info[duel_id]);
+        sendToNotifierWithId(duel_info[duel_id], duel_id);
         return callback("","processing card choice");
         //res.send("processing card choice")
     });
 
 };
 
+// damage = att * att / (att + def)
 exports.attack = (req,res,callback) => {
     //req contains duelId, attCardId & defCardId
     
     //if user AP allows it, do the HP calculus for cards
     if (duel_info[req.body.duelId]['turn']==1){
-        let att_card = duel_info[req.body.duelId].user_1_cards_info.find(card => card.id == req.body.attCardId)
+        let att_card = duel_info[req.body.duelId].player_1.user_card_ids.find(card => card.id == req.body.attCardId)
         attack_cost = att_card.energy;
-        if (duel_info[req.body.duelId].user_1_ap > attack_cost) {
+        if (duel_info[req.body.duelId].player_1.user_ap >= attack_cost) {
             //substract ap from user and hp from def card
-            duel_info[req.body.duelId].user_1_ap-attack_cost;
-            duel_info[req.body.duelId].user_2_cards_info.forEach(function(card, i) {
+            duel_info[req.body.duelId].player_1.user_ap -= attack_cost;
+            duel_info[req.body.duelId].player_2.user_card_ids.forEach(function(card, i) {
                 if (card.id == req.body.defCardId) {
-                    damage = att_card.attack - card.defence;
+                    // damage = att_card.attack - card.defence;
+                    damage = att_card.attack * att_card.attack / (att_card.attack + card.defence)
                     if (damage > 0) {
-                        duel_info[req.body.duelId].user_2_cards_info[i].hp -= damage;
+                        duel_info[req.body.duelId].player_2.user_card_ids[i].hp -= damage;
                     }
                 }
             });
         } ;
     } else {
-        let att_card = duel_info[req.body.duelId].user_2_cards_info.find(card => card.id == req.body.attCardId)
-        if (duel_info[req.body.duelId].user_2_ap > 3) {
+        let att_card = duel_info[req.body.duelId].player_2.user_card_ids.find(card => card.id == req.body.attCardId)
+        attack_cost = att_card.energy;
+        if (duel_info[req.body.duelId].player_2.user_ap >= attack_cost) {
             //substract ap from user and hp from def card
-            duel_info[req.body.duelId].user_2_ap-attack_cost;
-            duel_info[req.body.duelId].user_1_cards_info.forEach(function(card, i) {
+            duel_info[req.body.duelId].player_2.user_ap -= attack_cost;
+            duel_info[req.body.duelId].player_1.user_card_ids.forEach(function(card, i) {
                 if (card.id == req.body.defCardId) {
-                    damage = att_card.attack - card.defence;
+                    // damage = att_card.attack - card.defence;
+                    damage = att_card.attack * att_card.attack / (att_card.attack + card.defence)
                     if (damage > 0) {
-                        duel_info[req.body.duelId].user_1_cards_info[i].hp -= damage;
+                        duel_info[req.body.duelId].player_1.user_card_ids[i].hp -= damage;
                     }
                 }
             });
         }
     }
 
-    const winner_id = isGameWon;
+    const winner_id = isGameWon(req.body.duelId);
     if (winner_id) return gameOver(callback,req.body.duelId, winner_id);
 
     //send duel_info to notifier
-    sendToNotifierWithId(duel_info[req.body.duelId]);
+    sendToNotifierWithId(duel_info[req.body.duelId], req.body.duelId);
     return callback("","processing attack")
 //    res.send("processing attack");
 };
@@ -147,20 +157,20 @@ exports.endTurn = (req,res,callback) => {
 
     //reset user AP, and change turn
     if (duel_info[req.body.duelId]['turn']==1){
-        duel_info[req.body.duelId].user_1_ap = starting_ap;
+        duel_info[req.body.duelId].player_1.user_ap += starting_ap;
         duel_info[req.body.duelId]['turn']=2;
     } else {
-        duel_info[req.body.duelId].user_2_ap = starting_ap;
+        duel_info[req.body.duelId].player_2.user_ap += starting_ap;
         duel_info[req.body.duelId]['turn']=1;
     }
     //send duel_info to notifier
-    sendToNotifierWithId(duel_info[req.body.duelId]);
+    sendToNotifierWithId(duel_info[req.body.duelId], req.body.duelId);
     return callback("",duel_info[req.body.duelId]);
 };
 
 exports.getDuelInfo = (req,res,callback) => {
     console.log('client getting duel info')
     //res.send("ok")
-    sendToNotifierWithId(duel_info[req.body.duelId]);
+    sendToNotifierWithId(duel_info[req.body.duelId], req.body.duelId);
     return callback("",duel_info[req.body.duelId]);
 };

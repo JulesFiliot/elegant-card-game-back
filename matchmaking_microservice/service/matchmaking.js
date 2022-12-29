@@ -1,3 +1,4 @@
+const axios = require('axios');
 const pool = [];
 const init_duel_url = "http://127.0.0.1:8084/duel/init/";
 
