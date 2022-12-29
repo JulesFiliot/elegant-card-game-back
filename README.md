@@ -5,34 +5,33 @@
 put the following code in the file :
 ```
 server {
-        listen       8084;
-        server_name  localhost;
+    listen       8084;
+    server_name  localhost;
 
-		location /duel/ {
-            proxy_pass http://localhost:3002/;
-        }
-
-        location /matchmaking/ {
-            proxy_pass http://localhost:3003/;
-        }
-
-        location /notifier/ {
-            proxy_pass http://localhost:3001/;
-        }
-
-		location /mainapp/{
-            proxy_pass http://localhost:8083/;
-        }
-
-		location /chatws/ {
-			proxy_pass http://localhost:9999/socket.io/;
-		}
-		
-		location /notifierws/ {
-			proxy_pass http://localhost:3001/socket.io/;
-		}
-
+    location /duel/ {
+        proxy_pass http://localhost:3002/;
     }
+
+    location /matchmaking/ {
+        proxy_pass http://localhost:3003/;
+    }
+
+    location /notifier/ {
+        proxy_pass http://localhost:3001/;
+    }
+
+    location /mainapp/{
+        proxy_pass http://localhost:8083/;
+    }
+
+    location /chatws/ {
+        proxy_pass http://localhost:9999/socket.io/;
+    }
+    
+    location /notifierws/ {
+        proxy_pass http://localhost:3001/socket.io/;
+    }
+}
 ```
 3. you can now start nginx with the `nginx` command
 
