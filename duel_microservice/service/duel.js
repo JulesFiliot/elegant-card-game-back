@@ -43,7 +43,7 @@ async function gameOver(callback, duelId, winnerId) {
     // give money to winning user
     let winner;
     let looser;
-    axios.get(`http://localhost:8083/user/${winnerId}`)
+    axios.get(`http://localhost:8084/mainapp/user/${winnerId}`)
         .then((data) => {
             winner = data?.data;
             if (winnerId == duel_info[duelId].player_1.id) {
@@ -51,7 +51,7 @@ async function gameOver(callback, duelId, winnerId) {
             } else {
                 looser = duel_info[duelId].player_1.id;
             }
-            axios.get(`http://localhost:8083/user/${looser}`)
+            axios.get(`http://localhost:8084/mainapp/user/${looser}`)
                 .then((data) => {
                     looser = data?.data;
                     let pay = 0;
@@ -65,8 +65,8 @@ async function gameOver(callback, duelId, winnerId) {
                         winner.account += winner.account * 0.1;
                         looser.account -= winner.account * 0.1;
                     }
-                    axios.post(`http://localhost:8083/user/${looser.id}`, looser);
-                    axios.post(`http://localhost:8083/user/${winnerId}`, winner).finally(() => {
+                    axios.post(`http://localhost:8084/mainapp/user/${looser.id}`, looser);
+                    axios.post(`http://localhost:8084/mainapp/user/${winnerId}`, winner).finally(() => {
                         // send winner to notifier
                         axios.post(notify_url, { duel_id: duelId, winner_id: winnerId, pay });
                     });
@@ -106,7 +106,7 @@ exports.chooseCards = (req,res,callback) => {
     // add request to UserService to check if user really possesses the cards
 
     // add request to CardService to get info about chosen cards
-    let cards_info_url = 'http://localhost:8083/cards'
+    let cards_info_url = 'http://localhost:8084/mainapp/cards'
     axios.get(cards_info_url).then((response)=>{
         if (user_id==duel_info[duel_id].player_1.id){
             duel_info[duel_id].player_1.user_card_ids = response.data.filter((c) => card_ids.includes(c.id))

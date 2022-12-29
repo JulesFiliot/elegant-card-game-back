@@ -53,7 +53,6 @@ ioServer.on('connection', (socket) => {
               console.error('Erreur lors de la lecture du message :', error);
               return;
             }
-            console.log(body);
             ioServer.emit('message', body);
           });
         });

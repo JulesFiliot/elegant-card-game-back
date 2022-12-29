@@ -3,7 +3,7 @@ import conversation from "./conversation.js";
 
 export async function sendConversation(conversation){
     let id = conversation.id
-    const url='http://localhost:8083/Conversation/'+id;
+    const url='http://localhost:8084/mainapp/Conversation/'+id;
 
     return fetch(url, {
         method: 'POST',
@@ -21,7 +21,7 @@ export async function sendConversation(conversation){
 
 }
 export async function getConversation(id){
-    const url='http://localhost:8083/Conversation/'+id;
+    const url='http://localhost:8084/mainapp/Conversation/'+id;
     const response = await fetch(url);
     const data = await response.json();
     return data;
