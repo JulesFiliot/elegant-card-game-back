@@ -5,6 +5,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Controller;
 
 import com.example.demo.model.Loggs;
+import org.json.JSONObject;
 
 import DTOuser.UserDTO;
 
@@ -26,10 +27,19 @@ public class LoggsController {
 	@JmsListener(destination = "user_update", containerFactory = "connectionFactory")
     public void userLogger(UserDTO msgStr) {
 		Loggs log= new Loggs();
-		log.setContent(msgStr.toString());
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("SurName", msgStr.getSurName());
+        jsonObject.put("LastName", msgStr.getLastName());
+        jsonObject.put("id", msgStr.getId());
+    	jsonObject.put("CardList", msgStr.getCardList().toString());
+        jsonObject.put("Email", msgStr.getEmail());
+        String jsonString = jsonObject.toString();
+        log.setContent(jsonString);
+
+        System.out.println(jsonString);
 		log.setType("[updating user]");
 		loggsService.addLoggs(log);		
-        System.out.println("[UPDATE USER] RECEIVED String MSG=["+msgStr+"]");
+        System.out.println("[UPDATE USER] RECEIVED String MSG=["+jsonString+"]");
 
     }
 	@JmsListener(destination = "notifications", containerFactory = "connectionFactory")
