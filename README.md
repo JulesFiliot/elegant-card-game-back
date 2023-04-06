@@ -1,4 +1,11 @@
-—— NGINX ——
+# Elegant Card Game back-end
+Current repo
+
+# Front-end: 
+https://gitlab.com/PierreCruveiller/elegant-card-game
+
+
+# —— NGINX ——
 
 1. (install nginx if needed)
 2. configure nginx by modifying the file located at '/etc/nginx/nginx.conf' (or '/usr/local/etc/nginx/nginx.conf' on mac):
